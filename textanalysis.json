@@ -1,0 +1,414 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Text Analytics API",
+        "description": "A suite of text analytics web service APIs built with Azure Machine Learning.\n",
+        "version": "1.0"
+    },
+    "host": "api.datamarket.azure.com",
+    "basePath": "/data.ashx/amla/text-analytics/v1",
+    "schemes": [
+        "https"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/GetSentiment": {
+            "get": {
+                "tags": [
+                    "Sentiment"
+                ],
+                "description": "The sentiment analysis API returns a numeric score between 0 & 1. Scores\nclose to 1 indicate positive sentiment, while scores close to 0 indicate\nnegative sentiment. Currently, English is the only supported language.\n",
+                "parameters": [
+                    {
+                        "name": "Text",
+                        "in": "query",
+                        "required": true,
+                        "description": "The text to be analyzed.",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The sentiment score of the input text.",
+                        "schema": {
+                            "$ref": "#/definitions/SentimentResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input received."
+                    },
+                    "401": {
+                        "description": "Authorization type not supported."
+                    }
+                }
+            }
+        },
+        "/GetKeyPhrases": {
+            "get": {
+                "tags": [
+                    "Key Phrases"
+                ],
+                "description": "The key phrase extraction API returns a list of strings denoting the\nkey talking points in the input text. Currently, English is the only supported language.\n",
+                "parameters": [
+                    {
+                        "name": "Text",
+                        "in": "query",
+                        "description": "The text to be analyzed.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of key phrases in the input text.",
+                        "schema": {
+                            "$ref": "#/definitions/KeyPhrasesResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input received."
+                    },
+                    "401": {
+                        "description": "Authorization type not supported."
+                    }
+                }
+            }
+        },
+        "/GetLanguage": {
+            "get": {
+                "tags": [
+                    "Language"
+                ],
+                "description": "The language detection API returns the detected language and a numeric\nscore between 0 & 1. Scores close to 1 indicate 100% certainty that the\nidentified language is true. A total of 120 languages are supported.\n",
+                "parameters": [
+                    {
+                        "name": "Text",
+                        "in": "query",
+                        "description": "The text to be analyzed.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "NumberOfLanguagesToDetect",
+                        "in": "query",
+                        "description": "The maximum number of languages to return (Default 1).",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of detected languages for the input text.",
+                        "schema": {
+                            "$ref": "#/definitions/LanguageResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input received."
+                    },
+                    "401": {
+                        "description": "Authorization type not supported."
+                    }
+                }
+            }
+        },
+        "/GetSentimentBatch": {
+            "post": {
+                "tags": [
+                    "Sentiment"
+                ],
+                "description": "Returns a list of the sentiment values for each of the input texts, maximum 1000.",
+                "parameters": [
+                    {
+                        "name": "Inputs",
+                        "in": "body",
+                        "description": "An array of ID, text pairs.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/BatchQuery"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of sentiment scores.",
+                        "schema": {
+                            "$ref": "#/definitions/SentimentBatchResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input received."
+                    },
+                    "401": {
+                        "description": "Authorization type not supported."
+                    }
+                }
+            }
+        },
+        "/GetKeyPhrasesBatch": {
+            "post": {
+                "tags": [
+                    "Key Phrases"
+                ],
+                "description": "Returns a list of the key phrases for each of the input texts, maximum 1000.",
+                "parameters": [
+                    {
+                        "name": "Inputs",
+                        "in": "body",
+                        "description": "An array of ID, text pairs.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/BatchQuery"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of key phrase responses.",
+                        "schema": {
+                            "$ref": "#/definitions/KeyPhrasesBatchResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input received."
+                    },
+                    "401": {
+                        "description": "Authorization type not supported."
+                    }
+                }
+            }
+        },
+        "/GetLanguageBatch": {
+            "post": {
+                "tags": [
+                    "Language"
+                ],
+                "description": "Returns a list of the languages for each of the input text, maximum 1000.",
+                "parameters": [
+                    {
+                        "name": "Inputs",
+                        "in": "body",
+                        "description": "An array of ID, text pairs.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/BatchQuery"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of detected language responses.",
+                        "schema": {
+                            "$ref": "#/definitions/LanguageBatchResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input received."
+                    },
+                    "401": {
+                        "description": "Authorization type not supported."
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "SentimentResponse": {
+            "type": "object",
+            "properties": {
+                "odata.metadata": {
+                    "type": "string"
+                },
+                "Score": {
+                    "type": "number",
+                    "format": "double"
+                }
+            }
+        },
+        "KeyPhrasesResponse": {
+            "type": "object",
+            "properties": {
+                "odata.metadata": {
+                    "type": "string"
+                },
+                "KeyPhrases": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "LanguageResponse": {
+            "type": "object",
+            "properties": {
+                "odata.metadata": {
+                    "type": "string"
+                },
+                "UnknownLanguage": {
+                    "type": "boolean"
+                },
+                "DetectedLanguages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/DetectedLanguage"
+                    }
+                }
+            }
+        },
+        "BatchQuery": {
+            "type": "object",
+            "properties": {
+                "Inputs": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "Id": {
+                                "type": "string"
+                            },
+                            "Text": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "SentimentBatchResponse": {
+            "type": "object",
+            "properties": {
+                "odata.metadata": {
+                    "type": "string"
+                },
+                "SentimentBatch": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/BatchScore"
+                    }
+                },
+                "Errors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/BatchError"
+                    }
+                }
+            }
+        },
+        "BatchScore": {
+            "type": "object",
+            "properties": {
+                "Score": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "Id": {
+                    "type": "string"
+                }
+            }
+        },
+        "KeyPhrasesBatchResponse": {
+            "type": "object",
+            "properties": {
+                "odata.metadata": {
+                    "type": "string"
+                },
+                "KeyPhrasesBatch": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/BatchKeyPhrases"
+                    }
+                },
+                "Errors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/BatchError"
+                    }
+                }
+            }
+        },
+        "BatchKeyPhrases": {
+            "type": "object",
+            "properties": {
+                "KeyPhrases": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "Id": {
+                    "type": "string"
+                }
+            }
+        },
+        "LanguageBatchResponse": {
+            "type": "object",
+            "properties": {
+                "odata.metadata": {
+                    "type": "string"
+                },
+                "LanguageBatch": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/BatchLanguage"
+                    }
+                },
+                "Errors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/BatchError"
+                    }
+                }
+            }
+        },
+        "BatchLanguage": {
+            "type": "object",
+            "properties": {
+                "Id": {
+                    "type": "string"
+                },
+                "DetectedLanguages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/DetectedLanguage"
+                    }
+                },
+                "UnknownLanguage": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "DetectedLanguage": {
+            "type": "object",
+            "properties": {
+                "Name": {
+                    "type": "string"
+                },
+                "Iso6391Name": {
+                    "type": "string"
+                },
+                "Score": {
+                    "type": "number",
+                    "format": "double"
+                }
+            }
+        },
+        "BatchError": {
+            "type": "object",
+            "properties": {
+                "Id": {
+                    "type": "string"
+                },
+                "Message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
