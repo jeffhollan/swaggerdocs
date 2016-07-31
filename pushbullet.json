@@ -1,0 +1,164 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "PushBullet API",
+        "description": "Create pushes to your devices",
+        "version": "2.0.0"
+    },
+    "host": "api.pushbullet.com",
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/v2",
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/pushes": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "operationId": "Send a PushBullet notification",
+                "summary": "Create Push",
+                "description": "Send a push notification to devices",
+                "parameters": [
+                    {
+                        "name": "Access-Token",
+                        "in": "header",
+                        "description": "PushBullet Access Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "The note to send",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/NoteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Push response",
+                        "schema": {
+                            "$ref": "#/definitions/PushResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "NoteRequest": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "note",
+                        "link",
+                        "file"
+                    ],
+                    "description": "Type of push notification"
+                },
+                "title": {
+                    "type": "string",
+                    "description": "The title for the push"
+                },
+                "body": {
+                    "type": "string",
+                    "description": "The push notification message"
+                },
+                "url": {
+                    "type": "string",
+                    "description": "The URL to open",
+                    "x-ms-visibility": "advanced"
+                },
+                "file_name": {
+                    "type": "string",
+                    "description": "The name of the file",
+                    "x-ms-visibility": "advanced"
+                },
+                "file_type": {
+                    "type": "string",
+                    "description": "The MIME type of the file (image/jpeg)",
+                    "x-ms-visibility": "advanced"
+                },
+                "file_url": {
+                    "type": "string",
+                    "description": "URL to the file to push",
+                    "x-ms-visibility": "advanced"
+                }
+            },
+            "required": [
+                "type",
+                "body"
+            ]
+        },
+        "PushResponse": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "description": "If the item has been deleted"
+                },
+                "iden": {
+                    "type": "string",
+                    "description": "Push message identifier"
+                },
+                "created": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Creation time in floating point seconds (unix)"
+                },
+                "modified": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Modified time in floating point seconds (unix)"
+                },
+                "type": {
+                    "type": "string",
+                    "description": "Type of push"
+                },
+                "dismissed": {
+                    "type": "boolean",
+                    "description": "If the push has been dismissed by any device"
+                },
+                "direction": {
+                    "type": "string",
+                    "description": "Direction the push was sent in. self, outgoing, or incoming"
+                },
+                "sender_iden": {
+                    "type": "string"
+                },
+                "sender_email": {
+                    "type": "string"
+                },
+                "sender_email_normalized": {
+                    "type": "string"
+                },
+                "sender_name": {
+                    "type": "string"
+                },
+                "reciever_iden": {
+                    "type": "string"
+                },
+                "receiver_email": {
+                    "type": "string"
+                },
+                "receiver_email_normalized": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "body": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
